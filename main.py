@@ -172,7 +172,7 @@ def history():
         logger.error(f"Error fetching scan history: {str(e)}")
         return render_template('error.html', message="Could not fetch scan history. Please try again later."), 500
 
-@app.route('/scan', methods=['POST'])
+@app.route('/results', methods=['POST'])
 @limiter.limit("2 per minute")
 def scan():
     try:
@@ -218,7 +218,7 @@ def scan():
         db.session.commit()
         
         # Redirect to results page
-        return redirect(url_for('scan_results', scan_id=new_scan.id))
+        return redirect(url_for('results', scan_id=new_scan.id))
 
     except Exception as e:
         logger.error(f"Scan error: {str(e)}")
