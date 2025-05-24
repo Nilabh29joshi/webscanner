@@ -1,0 +1,188 @@
+/* Additional styles for OWASP Scanner */
+
+/* Custom container width for better readability */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+/* Make pre tags in remediation tips more readable */
+pre {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    font-family: "Consolas", "Monaco", monospace;
+}
+
+/* Add hover effect to accordion items */
+.accordion-button:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Make the badges stand out a bit more */
+.badge {
+    font-size: 0.85em;
+    padding: 0.35em 0.65em;
+}
+
+/* Add some subtle effects to the cards */
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Improved form styling */
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Footer styling */
+footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Make list items more readable */
+.list-group-item {
+    line-height: 1.6;
+}
+
+ .chatbot-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    .chatbot-btn:hover {
+      background: #0056b3;
+      transform: scale(1.1);
+    }
+    .chatbot-window {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 350px;
+      max-height: 500px;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 1000;
+    }
+    .chatbot-header {
+      background: #007bff;
+      color: #fff;
+      padding: 15px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chatbot-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background: #f8f9fa;
+    }
+    .chatbot-message {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      max-width: 80%;
+    }
+    .chatbot-message.user {
+      background: #007bff;
+      color: #fff;
+      margin-left: auto;
+    }
+    .chatbot-message.bot {
+      background: #e9ecef;
+      color: #333;
+    }
+    .chatbot-input {
+      display: flex;
+      border-top: 1px solid #e0e0e0;
+      padding: 10px;
+      background: #fff;
+    }
+    .chatbot-input input {
+      flex: 1;
+      border: none;
+      border-radius: 20px;
+      padding: 10px;
+      margin-right: 10px;
+      background: #f1f3f5;
+      color: #333;
+    }
+    .chatbot-input input:focus {
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+    }
+    .chatbot-input button {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .chatbot-input button:hover {
+      background: #0056b3;
+    }
+    .chatbot-header .btn-clear {
+      background: #dc3545;
+      border: none;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .chatbot-header .btn-clear:hover {
+      background: #c82333;
+    }
+    @media (max-width: 768px) {
+      .container {
+        margin: 10px;
+        padding: 15px;
+        flex-direction: column;
+      }
+      #map, .sidebar {
+        height: 400px;
+      }
+      .form-row > * {
+        min-width: 100%;
+      }
+      .chatbot-window {
+        width: 90%;
+        bottom: 70px;
+        right: 5%;
+      }
+    }

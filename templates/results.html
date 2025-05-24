@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Results - Aegis Probe</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-shield-alt me-2"></i>AegisProbe
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/history">Scan History</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="card bg-dark mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h2 class="card-title mb-0">Scan Results</h2>
+                            <a href="/history" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Back to History
+                            </a>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <strong>Target:</strong> {{ scan.target_url }}
+                            <div class="mt-1">
+                                <strong>Scan Date:</strong> {{ scan.scan_date.strftime('%Y-%m-%d %H:%M:%S') }}
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Security Summary</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5>Issues Found</h5>
+                                        {% set critical_issues = scan.scan_results.scans|selectattr('vulnerable', 'equalto', true)|selectattr('severity', 'equalto', 'Critical')|list|length %}
+                                        {% set high_issues = scan.scan_results.scans|selectattr('vulnerable', 'equalto', true)|selectattr('severity', 'equalto', 'High')|list|length %}
+                                        {% set medium_issues = scan.scan_results.scans|selectattr('vulnerable', 'equalto', true)|selectattr('severity', 'equalto', 'Medium')|list|length %}
+                                        
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <span>Critical issues:</span>
+                                            <span class="badge bg-danger">{{ critical_issues }}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <span>High severity issues:</span>
+                                            <span class="badge bg-warning">{{ high_issues }}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <span>Medium severity issues:</span>
+                                            <span class="badge bg-primary">{{ medium_issues }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <h5>Security Score</h5>
+                                        <div class="progress" style="height: 25px;">
+                                            {% if scan.security_score >= 80 %}
+                                                {% set score_class = "bg-success" %}
+                                            {% elif scan.security_score >= 50 %}
+                                                {% set score_class = "bg-warning" %}
+                                            {% else %}
+                                                {% set score_class = "bg-danger" %}
+                                            {% endif %}
+                                            
+                                            <div class="progress-bar {{ score_class }}" role="progressbar" 
+                                                style="width: {{ scan.security_score }}%;" 
+                                                aria-valuenow="{{ scan.security_score }}" aria-valuemin="0" aria-valuemax="100">
+                                                {{ scan.security_score|round|int }}%
+                                            </div>
+                                        </div>
+                                        <p class="mt-2">{{ scan.vulnerability_count }} vulnerabilities detected from {{ scan.scan_results.scans|length }} tests</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 class="mb-3">Detailed Vulnerability Report</h3>
+                        
+                        <div class="accordion">
+                            {% for vulnerability in scan.scan_results.scans %}
+                                {% if vulnerability.severity == 'Critical' %}
+                                    {% set severity_class = "danger" %}
+                                {% elif vulnerability.severity == 'High' %}
+                                    {% set severity_class = "warning" %}
+                                {% elif vulnerability.severity == 'Medium' %}
+                                    {% set severity_class = "primary" %}
+                                {% else %}
+                                    {% set severity_class = "success" %}
+                                {% endif %}
+                                
+                                {% set border_class = "border-danger" if vulnerability.vulnerable else "border-success" %}
+                                
+                                <div class="accordion-item {{ border_class }} mb-2">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button {{ "" if vulnerability.vulnerable else "collapsed" }}" type="button" 
+                                                data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}">
+                                            <div class="d-flex justify-content-between align-items-center w-100">
+                                                <span>{{ vulnerability.name }}</span>
+                                                <span class="badge bg-{{ severity_class }} ms-2">{{ vulnerability.severity }}</span>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse{{ loop.index }}" 
+                                         class="accordion-collapse collapse {{ "show" if vulnerability.vulnerable else "" }}">
+                                        <div class="accordion-body">
+                                            <div class="alert alert-{{ "danger" if vulnerability.vulnerable else "success" }} mb-3">
+                                                <strong>Status:</strong> 
+                                                {{ "Vulnerabilities Found" if vulnerability.vulnerable else "No Vulnerabilities Detected" }}
+                                            </div>
+                                            
+                                            <h5>Findings:</h5>
+                                            <ul class="list-group mb-4">
+                                                {% for finding in vulnerability.findings %}
+                                                    <li class="list-group-item bg-dark text-light">{{ finding }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                            
+                                            {% if vulnerability.vulnerable and vulnerability.remediation_tips %}
+                                                <div class="card border-info mb-3">
+                                                    <div class="card-header bg-info text-dark">
+                                                        <i class="fas fa-tools me-2"></i>Remediation Tips
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <pre class="mb-0">{{ vulnerability.remediation_tips }}</pre>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-5 py-3 bg-dark">
+        <div class="container text-center">
+            <p class="text-muted mb-0">OWASP Top 10 Vulnerability Scanner | Educational Tool</p>
+            <p class="text-muted">
+                <small>Based on <a href="https://owasp.org/Top10/" target="_blank">OWASP Top 10 Web Application Security Risks</a></small>
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
