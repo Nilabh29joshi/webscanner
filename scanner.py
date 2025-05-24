@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class WebVulnerabilityScanner:
     def __init__(self, url):
         self.url = url
-        self.timeout = 10
+        self.timeout = 30
         self.headers = {
             'User-Agent': 'Security Scanner Testing - Educational Purposes Only'
         }
