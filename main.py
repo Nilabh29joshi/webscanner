@@ -218,7 +218,7 @@ def scan():
         db.session.commit()
         
         # Redirect to results page
-        return redirect(url_for('results', scan_id=new_scan.id))
+        return redirect(url_for('scan_results', scan_id=new_scan.id))
 
     except Exception as e:
         logger.error(f"Scan error: {str(e)}")
