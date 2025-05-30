@@ -68,7 +68,7 @@ db.init_app(app)
 limiter = Limiter(
     app=app,
     key_func=get_remote_address,
-    default_limits=["50 per day", "10 per hour"]
+    default_limits=["100 per day", "30 per hour"]
 )
 
 # Create database tables with error handling
@@ -173,7 +173,7 @@ def history():
         return render_template('error.html', message="Could not fetch scan history. Please try again later."), 500
 
 @app.route('/results', methods=['POST'])
-@limiter.limit("2 per minute")
+@limiter.limit("5 per minute")
 def scan():
     try:
         target_url = request.form.get('url', '')
